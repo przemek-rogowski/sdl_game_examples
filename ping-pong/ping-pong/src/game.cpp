@@ -2,7 +2,6 @@
 #include <iostream>
 
 const int thickness = 15;
-const int paddleH = 100;
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;

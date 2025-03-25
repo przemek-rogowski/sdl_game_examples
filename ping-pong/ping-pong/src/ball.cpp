@@ -3,7 +3,6 @@
 #include "sdl_ext.hpp"
 
 const int thickness = 15;
-const int paddleH = 100;
 
 Ball::Ball(int x, int y): x(x), y(y) {};
 
