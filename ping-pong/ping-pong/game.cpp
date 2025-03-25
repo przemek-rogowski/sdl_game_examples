@@ -1,7 +1,5 @@
 #include "game.hpp"
 #include <iostream>
-#include "sdl_ext.hpp"
-#include <cstdlib>
 
 const int thickness = 15;
 const int paddleH = 100;
@@ -9,8 +7,12 @@ const int paddleH = 100;
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
 
-Game::Game(): mWindow(nullptr), mRenderer(nullptr), mIsRunning(true) {
-}
+Game::Game(): mWindow(nullptr), mRenderer(nullptr), mIsRunning(true),
+    mLeftPaddle(thickness*2, SCREEN_HEIGHT/2, SCREEN_HEIGHT),
+    mRightPaddle(SCREEN_WIDTH - thickness, SCREEN_HEIGHT/2, SCREEN_HEIGHT),
+    mBall({SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}),
+    mUpperWall(0, 0, SCREEN_WIDTH, thickness),
+    mLowerWall(0, SCREEN_HEIGHT - thickness, SCREEN_WIDTH, thickness) {}
 
 bool Game::Initialize() {
     
@@ -39,9 +41,7 @@ bool Game::Initialize() {
         return false;
     }
     
-    mPaddlePos = {thickness*2, SCREEN_HEIGHT/2};
-    mBallPos = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
-    mBallVel = {-200.0f, 235.0f};
+    mBall.SetVelocity(-200.0f, 235.0f);
     
     return true;
 }
@@ -76,10 +76,17 @@ void Game::ProcessInput() {
     }
     
     if (state[SDL_SCANCODE_W]) {
-        mPaddleDir = -1;
+        mLeftPaddle.GoUp();
     }
     if (state[SDL_SCANCODE_S]) {
-        mPaddleDir = 1;
+        mLeftPaddle.GoDown();
+    }
+    
+    if (state[SDL_SCANCODE_I]) {
+        mRightPaddle.GoUp();
+    }
+    if (state[SDL_SCANCODE_K]) {
+        mRightPaddle.GoDown();
     }
 }
 
@@ -94,38 +101,16 @@ void Game::UpdateGame() {
         deltaTime = 0.5f;
     }
     
-    if (mPaddleDir != 0) {
-        mPaddlePos.y += mPaddleDir * 300.0f * deltaTime;
-        
-        if (mPaddlePos.y < (paddleH / 2.0f + thickness)) {
-            mPaddlePos.y = paddleH / 2.0f + thickness;
-        }
-        if (mPaddlePos.y > (SCREEN_HEIGHT - thickness - paddleH / 2.0f)) {
-            mPaddlePos.y = SCREEN_HEIGHT - thickness - paddleH / 2.0f;
-        }
-    }
+    mLeftPaddle.Update(deltaTime);
+    mRightPaddle.Update(deltaTime);
+    mBall.Update(deltaTime);
     
-    mBallPos.x += mBallVel.x * deltaTime;
-    mBallPos.y += mBallVel.y * deltaTime;
-    
-    float diff = abs(mPaddlePos.y - mBallPos.y);
-    
-    if (
-        diff <= paddleH / 2.0f &&
-        mBallPos.x <= (mPaddlePos.x + thickness) &&
-        (mPaddlePos.x - thickness) <= mBallPos.x &&
-        mBallVel.x < 0.0f
-        )
-    {
-        mBallVel.x *= -1.0f;
-    } else if (mBallPos.x < 0.0f) {
+    if (mBall.Collides(mLeftPaddle) || mBall.Collides(mRightPaddle)) {
+        mBall.BounceX();
+    } else if (mBall.x < 0.0f || SCREEN_WIDTH < mBall.x) {
         mIsRunning = false;
-    } else if (mBallPos.y <= 1.5*thickness && mBallVel.y < 0.0f) {
-        mBallVel.y *= -1;
-    } else if (mBallPos.y >= SCREEN_HEIGHT - thickness) {
-        mBallVel.y = -mBallVel.y;
-    } else if (mBallPos.x >= SCREEN_WIDTH - thickness) {
-        mBallVel.x = -mBallVel.x;
+    } else if (mBall.Collides(mUpperWall) || mBall.Collides(mLowerWall)) {
+        mBall.BounceY();
     }
 }
 
@@ -134,30 +119,14 @@ void Game::GenerateOutput() {
     SDL_RenderClear(mRenderer);
     
     SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 255);
-    SDL_Rect upperWall {0, 0, SCREEN_WIDTH, thickness};
-    SDL_RenderFillRect(mRenderer, &upperWall);
     
-    SDL_Rect downWall {0, SCREEN_HEIGHT - thickness, SCREEN_WIDTH, thickness};
-    SDL_RenderFillRect(mRenderer, &downWall);
+    mUpperWall.Draw(mRenderer);
+    mLowerWall.Draw(mRenderer);
     
-    SDL_Rect rightWall {SCREEN_WIDTH - thickness, 0, thickness, SCREEN_HEIGHT};
-    SDL_RenderFillRect(mRenderer, &rightWall);
+    mLeftPaddle.Draw(mRenderer);
+    mRightPaddle.Draw(mRenderer);
     
-    SDL_Rect ball{
-        static_cast<int>(mBallPos.x - thickness/2),
-        static_cast<int>(mBallPos.y - thickness/2),
-        thickness,
-        thickness
-    };
-    SDL_EXT::DrawFilledCircle(mRenderer, ball.x, ball.y, thickness/2);
-    
-    SDL_Rect paddle{
-        static_cast<int>(mPaddlePos.x - thickness/2),
-        static_cast<int>(mPaddlePos.y - paddleH / 2.0f),
-        thickness,
-        paddleH
-    };
-    SDL_RenderFillRect(mRenderer, &paddle);
+    mBall.Draw(mRenderer);
     
     SDL_RenderPresent(mRenderer);
 }

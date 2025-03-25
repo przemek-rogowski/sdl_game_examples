@@ -1,10 +1,8 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-
-struct Vector2 {
-    float x, y;
-};
+#include "paddle.hpp"
+#include "ball.hpp"
+#include "wall.hpp"
 
 class Game {
 public:
@@ -18,17 +16,17 @@ private:
     void UpdateGame();
     void GenerateOutput();
     
+    Paddle mLeftPaddle;
+    Paddle mRightPaddle;
+    Ball mBall;
+    
+    Wall mUpperWall;
+    Wall mLowerWall;
+    
     Uint32 mTicksCount = 0;
 
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
     bool mIsRunning;
-    
-    Vector2 mPaddlePos;
-    Vector2 mBallPos;
-    
-    Vector2 mBallVel;
-    
-    int mPaddleDir = 0;
 };
 
