@@ -23,14 +23,11 @@ void Ball::Draw(SDL_Renderer* mRenderer) {
         thickness,
         thickness
     };
-    SDL_EXT::DrawFilledCircle(mRenderer, ball.x, ball.y, thickness/2);
+    SDL_RenderFillRect(mRenderer, &ball);
 };
 
 bool Ball::CollidesWithRect(SDL_Rect rect) {
-    if ((rect.x <= x && x <= (rect.x + rect.w)) && (rect.y <= y && y <= (rect.y + rect.h))) {
-        return true;
-    }
-    return false;
+    return ((rect.x <= x && x <= (rect.x + rect.w)) && (rect.y <= y && y <= (rect.y + rect.h)));
 }
 
 bool Ball::Collides(Paddle paddle) {

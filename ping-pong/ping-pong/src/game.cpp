@@ -104,10 +104,10 @@ void Game::UpdateGame() {
     mRightPaddle.Update(deltaTime);
     mBall.Update(deltaTime);
     
-    if (mBall.Collides(mLeftPaddle) || mBall.Collides(mRightPaddle)) {
-        mBall.BounceX();
-    } else if (mBall.x < 0.0f || SCREEN_WIDTH < mBall.x) {
+    if (mBall.x < 0.0f || SCREEN_WIDTH < mBall.x) {
         mIsRunning = false;
+    } else if (mBall.Collides(mLeftPaddle) || mBall.Collides(mRightPaddle)) {
+        mBall.BounceX();
     } else if (mBall.Collides(mUpperWall) || mBall.Collides(mLowerWall)) {
         mBall.BounceY();
     }

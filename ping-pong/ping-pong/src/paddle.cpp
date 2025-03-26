@@ -26,6 +26,7 @@ void Paddle::Update(float deltaTime) {
         if (y > (mScreenHeight - thickness - paddleH / 2.0f)) {
             y = mScreenHeight - thickness - paddleH / 2.0f;
         }
+        mDirection = 0;
     }
 };
 
