@@ -41,4 +41,5 @@ build/
 *.perspective
 *.perspectivev3
 
-ProjectFolder.xcodeproj/project.xcworkspace/xcuserdata/
+ping-pong/ping-pong.xcodeproj/project.xcworkspace/xcuserdata/
+
