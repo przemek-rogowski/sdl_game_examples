@@ -18,7 +18,7 @@
                BlueprintIdentifier = "FD5FC54A2D8A0E1500200078"
                BuildableName = "pacman"
                BlueprintName = "pacman"
-               ReferencedContainer = "container:PacMan.xcodeproj">
+               ReferencedContainer = "container:pacman.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -48,7 +48,7 @@
             BlueprintIdentifier = "FD5FC54A2D8A0E1500200078"
             BuildableName = "pacman"
             BlueprintName = "pacman"
-            ReferencedContainer = "container:PacMan.xcodeproj">
+            ReferencedContainer = "container:pacman.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -65,7 +65,7 @@
             BlueprintIdentifier = "FD5FC54A2D8A0E1500200078"
             BuildableName = "pacman"
             BlueprintName = "pacman"
-            ReferencedContainer = "container:PacMan.xcodeproj">
+            ReferencedContainer = "container:pacman.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
