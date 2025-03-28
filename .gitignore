@@ -41,5 +41,7 @@ build/
 *.perspective
 *.perspectivev3
 
-ping-pong/ping-pong.xcodeproj/project.xcworkspace/xcuserdata/
+ping-pong/ping-pong.xcodeproj/project.xcworkspace/
+PacMan/PacMan.xcodeproj/project.xcworkspace/
+PacMan/PacMan.xcodeproj/xcuserdata/
 
